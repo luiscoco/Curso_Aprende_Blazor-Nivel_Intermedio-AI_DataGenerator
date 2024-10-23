@@ -674,6 +674,10 @@ var ticketThreads = await new TicketThreadGenerator(tickets, products, manuals, 
 Console.WriteLine($"Got {ticketThreads.Count} threads");
 ```
 
+The **GenerateThreadAsync** method generates a **conversation (thread)** for each ticket, starting with an **initial customer message** and then alternating between customer and support agent messages
+
+The **length of the conversation** is **randomized** using a geometric distribution, and the method determines whether the conversation should continue or if the ticket is resolved
+
 This is the code for creating the **CustomerMessage** inside the thread tickets:
 
 **TicketThreadGenerator.cs**
