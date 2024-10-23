@@ -292,9 +292,90 @@ await foreach (var batch in mappedBatches)
 }
 ```
 
-## 7.3. **ManualTocGenerator**:
+## 7.3. We create the Table of Contents for the Manuals 
 
+In the **middleware** after creating the **Categories** and **Products**, we generate the **Toc Manual** for each product
 
+A **TOC Manual** refers to a **Table of Contents Manual**, which is essentially a document that provides an organized listing of sections, chapters, and topics covered in a larger document or manual
+
+It helps users quickly locate and access specific information within the manual
+
+This is especially useful for complex documents such as technical manuals, instruction guides, or policy handbooks
+
+**Program.cs**
+
+```csharp
+var services = builder.Build().Services;
+
+var categories = await new CategoryGenerator(services).GenerateAsync();
+Console.WriteLine($"Got {categories.Count} categories");
+
+var products = await new ProductGenerator(categories, services).GenerateAsync();
+Console.WriteLine($"Got {products.Count} products");
+
+var manualTocs = await new ManualTocGenerator(categories, products, services).GenerateAsync();
+Console.WriteLine($"Got {manualTocs.Count} manual TOCs");
+```
+
+We also generate the TOC invoking the OpenAI service with the **ManualTocGenerator** class
+
+```csharp
+private async Task<ManualToc> GenerateTocForProductAsync(Product product)
+{
+    var styles = new[] {
+        "normal",
+        "friendly",
+        "trying to be cool and hip, with lots of emojis",
+        "extremely formal and embarrassingly over-polite",
+        "extremely technical, with many references to industrial specifications. Require the user to perform complex diagnostics using specialized industrial and scientific equipment before and after use.",
+        "extremely badly translated from another language - most sentences are in broken English, grammatically incorrect, and misspelled",
+        "confusing and often off-topic, with spelling mistakes",
+        "incredibly negative and risk-averse, implying it would be unreasonable to use the product for any use case at all.",
+    };
+    var chosenStyle = styles[Random.Shared.Next(styles.Length)];
+    var category = categories.SingleOrDefault(c => c.CategoryId == product.CategoryId);
+    if (category == null)
+    {
+        throw new InvalidOperationException($"Category not found for product {product.Model}");
+    }
+
+    var prompt = @$"Write a suggested table of contents for the user manual for the following product:
+
+        Category: {category.Name}
+        Brand: {product.Brand}
+        Product name: {product.Model}
+        Overview: {product.Description}
+
+        The manual MUST be written in the following style: {chosenStyle}
+        The table of contents MUST follow that style, even if it makes the manual useless to users.
+        Please not include special characters like: \u0027, \u0026, etc
+        
+        The response should be a JSON object of the form
+        {{
+            ""sections"": [
+                {{
+                    ""title"": ""..."",
+                    ""subsections"": [
+                        {{
+                            ""title"": ""..."",
+                            ""subsections"": [...]
+                        }},
+                        ...
+                    ]
+                }},
+                ...
+            ]
+        }}
+
+        Subsections can be nested up to 3 levels deep. Most sections have no subsections.";
+
+    var toc = await GetAndParseJsonChatCompletion<ManualToc>(prompt, maxTokens: 4000);
+    toc.ManualStyle = chosenStyle;
+    toc.ProductId = product.ProductId;
+    PopulateSiblingIndexes(toc.Sections);
+    return toc;
+}
+```
 
 ## 7.4. **ManualGenerator**:
 
