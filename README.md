@@ -12,9 +12,7 @@ With this application you will learn how to invoke **OpenAI API (ChatGPT service
 
 For this purpose we use the **Microsoft.Extensions.AI** library and function **CompleteAsync**. See the the file **GeneratorBase.cs**
 
-We also can learn the **Embedding and Manual Search**: The class uses an **IEmbeddingGenerator (for text embedding)** to facilitate information retrieval from product manuals
-
-This is used in the assistant's responses to help resolve customer queries
+We also can learn the **Embedding and Manual Search**: The class uses an **IEmbeddingGenerator (for text embedding)** to facilitate information retrieval from product manuals. This is used in the assistant's responses to help resolve customer queries
 
 The **SearchUserManualAsync** function **searches product manuals** for relevant information using text embeddings and returns the most similar text snippets
 
