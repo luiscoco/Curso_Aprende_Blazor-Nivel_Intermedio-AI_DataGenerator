@@ -1,4 +1,4 @@
-# Howto create a DataGenerator with a C# Console application invoking OpenAI API
+# How to create a DataGenerator with a C# Console application invoking OpenAI API
 
 This sample is based on the github repo: https://github.com/dotnet/eShopSupport
 
