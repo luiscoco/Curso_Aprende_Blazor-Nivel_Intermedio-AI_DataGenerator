@@ -40,7 +40,7 @@ We also can configure for using **Azure OpenAI**
     "chatcompletion": "Endpoint=https://<your-resource-name>.openai.azure.com/;Key=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;Deployment=<your-deployment-name>;ApiVersion=2023-05-15"
   }
 }
-``
+```
 
 **ChatCompletionServiceExtensions.cs**
 
