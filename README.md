@@ -225,7 +225,7 @@ We write the output in a JSON file in the **output** directory:
 
 ![image](https://github.com/user-attachments/assets/a3d1ad7c-2ee9-4af8-af54-307d9938b7c3)
 
-## 7.2. We also invoke **ProductGenerator** for generating Products names
+### 7.2. We also invoke **ProductGenerator** for generating Products names
 
 In the **middleware** we invoke the **Products** geneation function:
 
@@ -292,7 +292,7 @@ await foreach (var batch in mappedBatches)
 }
 ```
 
-## 7.3. We create the Table of Contents for the Manuals 
+### 7.3. We create the Table of Contents for the Manuals 
 
 In the **middleware** after creating the **Categories** and **Products**, we generate the **Toc Manual** for each product
 
@@ -377,7 +377,7 @@ private async Task<ManualToc> GenerateTocForProductAsync(Product product)
 }
 ```
 
-## 7.4. We create the Markdown file for each Product Manual
+### 7.4. We create the Markdown file for each Product Manual
 
 In the **middleware** after creating the Categories, Products and ToC we create the Manuals in Markdown format
 
@@ -464,7 +464,7 @@ private static string SanitizeMarkdown(string markdown)
 }
 ```
 
-## 7.5. We convert the Manual from Markdown to PDF format
+### 7.5. We convert the Manual from Markdown to PDF format
 
 After creating the Categories, Products, ToCs and Manuals (in Markdown format), we proceed to convert the Manuals to PDF
 
@@ -542,12 +542,12 @@ We invoke the **Markdown2Pdf(version 2.2.1)** Nuget Package:
      }
 ```
 
-## 7.6. **TicketGenerator**:
+### 7.6. **TicketGenerator**:
 
-## 7.7.**TicketThreadGenerator**:
+### 7.7.**TicketThreadGenerator**:
 
-## 7.8. **TicketSummaryGenerator**:
+### 7.8. **TicketSummaryGenerator**:
 
-## 7.9. **EvalQuestionGenerator**:
+### 7.9. **EvalQuestionGenerator**:
 
-
+## 8. 
