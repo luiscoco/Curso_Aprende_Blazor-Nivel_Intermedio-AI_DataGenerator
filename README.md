@@ -212,20 +212,58 @@ We write the output in a JSON file in the **output** directory:
 
 ## 7.2. We also invoke **ProductGenerator** for generating Products names
 
+We also create the Products names invoking the OpenAI service with the following code, similar as in section 7.1:
+
+```csharp
+ var numProducts = 1;
+ var batchSize = 1;
+ var productId = 0;
+
+ var mappedBatches = MapParallel(Enumerable.Range(0, numProducts / batchSize), async batchIndex =>
+ {
+     var chosenCategories = Enumerable.Range(0, batchSize)
+         .Select(_ => categories[(int)Math.Floor(categories.Count * Random.Shared.NextDouble())])
+         .ToList();
+
+     var prompt = @$"Write list of {batchSize} products for an online retailer
+     of outdoor adventure goods and related electronics, clothing, and homeware. There is a focus on high-tech products. They match the following category/brand pairs:
+     {string.Join(Environment.NewLine, chosenCategories.Select((c, index) => $"- product {(index + 1)}: category {c.Name}, brand: {c.Brands[Random.Shared.Next(c.Brands.Length)]}"))}
+
+     Model names are up to 50 characters long, but usually shorter. Sometimes they include numbers, specs, or product codes.
+     Example model names: ""iGPS 220c 64GB"", ""Nomad Camping Stove"", ""UX Polarized Sunglasses (Womens)"", ""40L Backpack, Green""
+     Do not repeat the brand name in the model name.
+
+     The description is up to 200 characters long and is the marketing text that will appear on the product page.
+     Include the key features and selling points.
+
+     The result should be JSON form {{ ""products"": [{{ ""id"": 1, ""brand"": ""string"", ""model"": ""string"", ""description"": ""string"", ""price"": 123.45 }}] }}.";
+
+     var response = await GetAndParseJsonChatCompletion<Response>(prompt, maxTokens: 200 * batchSize);
+     var batchEntryIndex = 0;
+     foreach (var p in response.Products!)
+     {
+         var category = chosenCategories[batchEntryIndex++];
+         p.CategoryId = category.CategoryId;
+     }
+
+     return response.Products;
+ });
+```
+
+## 7.3. **ManualTocGenerator**:
 
 
-**ManualTocGenerator**:
 
-**ManualGenerator**:
+## 7.4. **ManualGenerator**:
 
-**ManualPdfConverter**: 
+## 7.5. **ManualPdfConverter**: 
 
-**TicketGenerator**:
+## 7.6. **TicketGenerator**:
 
-**TicketThreadGenerator**:
+## 7.7.**TicketThreadGenerator**:
 
-**TicketSummaryGenerator**:
+## 7.8. **TicketSummaryGenerator**:
 
-**EvalQuestionGenerator**:
+## 7.9. **EvalQuestionGenerator**:
 
 
