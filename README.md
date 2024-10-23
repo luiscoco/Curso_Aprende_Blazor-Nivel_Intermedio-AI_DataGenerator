@@ -281,6 +281,15 @@ We also **create the Products names** invoking the OpenAI service with the follo
 
      return response.Products;
  });
+
+await foreach (var batch in mappedBatches)
+{
+    foreach (var p in batch)
+    {
+        p.ProductId = ++productId;
+        yield return p;
+    }
+}
 ```
 
 ## 7.3. **ManualTocGenerator**:
