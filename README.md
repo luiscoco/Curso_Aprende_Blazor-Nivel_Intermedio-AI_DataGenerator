@@ -167,6 +167,8 @@ In the middleware we invoke the Categories geneation function:
 **Program.cs**
 
 ```csharp
+var services = builder.Build().Services;
+
 var categories = await new CategoryGenerator(services).GenerateAsync();
 Console.WriteLine($"Got {categories.Count} categories");
 ```
@@ -224,6 +226,22 @@ We write the output in a JSON file in the **output** directory:
 ![image](https://github.com/user-attachments/assets/a3d1ad7c-2ee9-4af8-af54-307d9938b7c3)
 
 ## 7.2. We also invoke **ProductGenerator** for generating Products names
+
+In the middleware we invoke the Products geneation function:
+
+**Program.cs**
+
+```csharp
+var categories = await new CategoryGenerator(services).GenerateAsync();
+Console.WriteLine($"Got {categories.Count} categories");
+
+var products = await new ProductGenerator(categories, services).GenerateAsync();
+Console.WriteLine($"Got {products.Count} products");
+```
+
+Then the Categories are provided by the OpenAI service in a JSON format:
+
+**CategoryGenerator.cs**
 
 We also create the Products names invoking the OpenAI service with the following code, similar as in section 7.1:
 
