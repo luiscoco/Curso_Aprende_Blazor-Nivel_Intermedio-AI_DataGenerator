@@ -1,5 +1,7 @@
 # How to create a DataGenerator with a C# Console application invoking OpenAI API
 
+## 1. Summary
+
 With this application you will learn how to invoke **OpenAI API (ChatGPT service)** or **Azure OpenAPI** from a C# Console application
 
 For this purpose we use the **Microsoft.Extensions.AI** library and function **CompleteAsync**. See the the file **GeneratorBase.cs**
@@ -13,7 +15,7 @@ We developed the **DataGenerator** application highlighted in the following **eS
 ![image](https://github.com/user-attachments/assets/2992d5a7-3c8c-4e95-bc99-d1d50fcf793c)
 
 
-## 1. Create a C# application with Visual Studio 2022
+## 2. Create a C# application with Visual Studio 2022
 
 We run Visual Studio 2022 and create a new project
 
@@ -31,7 +33,7 @@ We select the .NET 8 or 9 framework and press the Create button
 
 ![image](https://github.com/user-attachments/assets/a195ddf6-8989-41f4-9b4d-af22679300bb)
 
-## 2. Get an OpenAPI Key
+## 3. Get an OpenAPI Key
 
 Navigate to this URL and Generate an API Key: 
 
@@ -39,15 +41,15 @@ https://platform.openai.com/api-keys
 
 ![image](https://github.com/user-attachments/assets/7ce8e9e5-01c0-426b-b392-e1d0b631d7e5)
 
-## 3. Create the project folders
+## 4. Create the project folders
 
 ![image](https://github.com/user-attachments/assets/a24e00ec-1f6d-4d39-85d1-01bc47346f1e)
 
-## 4. Load the Nuget Packages
+## 5. Load the Nuget Packages
 
 ![image](https://github.com/user-attachments/assets/4adf3fdb-142b-4d03-9357-004faff9cee4)
 
-## 5. Configure the OpenAI service in appsettings.json file
+## 6. Configure the OpenAI service in appsettings.json file
 
 ```json
 {
@@ -57,7 +59,7 @@ https://platform.openai.com/api-keys
 }
 ```
 
-## 6. Middleware code
+## 7. Middleware code
 
 We first read the configuration files:
 
@@ -163,11 +165,11 @@ public static class ChatCompletionServiceExtensions
 }
 ```
 
-## 7. Application flow explanation
+## 8. Application flow explanation
 
 As we can see in the **Program.cs** this application sequentially execute the following tasks:
 
-### 7.1. We first invoke the **CategoryGenerator** class for generating product category names
+### 8.1. We first invoke the **CategoryGenerator** class for generating product category names
 
 In the **middleware** we invoke the **Categories** geneation function:
 
@@ -232,7 +234,7 @@ We write the output in a JSON file in the **output** directory:
 
 ![image](https://github.com/user-attachments/assets/a3d1ad7c-2ee9-4af8-af54-307d9938b7c3)
 
-### 7.2. We also invoke **ProductGenerator** for generating Products names
+### 8.2. We also invoke **ProductGenerator** for generating Products names
 
 In the **middleware** we invoke the **Products** geneation function:
 
@@ -299,7 +301,7 @@ await foreach (var batch in mappedBatches)
 }
 ```
 
-### 7.3. We create the Table of Contents for the Manuals 
+### 8.3. We create the Table of Contents for the Manuals 
 
 In the **middleware** after creating the **Categories** and **Products**, we generate the **Toc Manual** for each product
 
@@ -384,7 +386,7 @@ private async Task<ManualToc> GenerateTocForProductAsync(Product product)
 }
 ```
 
-### 7.4. We create the Markdown file for each Product Manual
+### 8.4. We create the Markdown file for each Product Manual
 
 In the **middleware** after creating the Categories, Products and ToC we create the Manuals in Markdown format
 
@@ -471,7 +473,7 @@ private static string SanitizeMarkdown(string markdown)
 }
 ```
 
-### 7.5. We convert the Manual from Markdown to PDF format
+### 8.5. We convert the Manual from Markdown to PDF format
 
 After creating the Categories, Products, ToCs and Manuals (in Markdown format), we proceed to convert the Manuals to PDF
 
@@ -549,7 +551,7 @@ We invoke the **Markdown2Pdf(version 2.2.1)** Nuget Package:
      }
 ```
 
-### 7.6. We create the Enqueries Tickets
+### 8.6. We create the Enqueries Tickets
 
 We invoke in the **middleware** the **TicketGenerator** for creating the Tickets content:
 
@@ -662,7 +664,7 @@ We also invoke the OpenAI service with the following code giving also two main i
   }
 ```
 
-### 7.7. We create the Threads Tickets
+### 8.7. We create the Threads Tickets
 
 We invoke in the **middleware** the **TicketThreadGenerator** for creating the Tickets content:
 
@@ -759,7 +761,7 @@ private async Task<Response> GenerateAssistantMessageAsync(Product product, Tick
 }
 ```
 
-### 7.8. **TicketSummaryGenerator**:
+### 8.8. **TicketSummaryGenerator**:
 
 In the middleware, we have to send as parameters the products and ticketThreads to be summarized bythe **TicketSummaryGenerator** class
 
@@ -842,7 +844,7 @@ We also summarize each ticket with the following prompt:
  }
 ```
 
-### 7.9. We create the Evaluation Questions
+### 8.9. We create the Evaluation Questions
 
 Finally, for generating, in the **middleware**, the questions we have to send as parameters the categories, products and manuals:
 
@@ -922,7 +924,7 @@ private async Task<EvalQuestion> GenerateSingle()
 }
 ```
 
-## 8. We run the application and see the outputs
+## 9. We run the application and see the outputs
 
 After running the application we confirm the **output** folder was created
 
