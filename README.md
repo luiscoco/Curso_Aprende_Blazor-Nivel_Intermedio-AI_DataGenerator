@@ -666,16 +666,167 @@ var ticketThreads = await new TicketThreadGenerator(tickets, products, manuals, 
 Console.WriteLine($"Got {ticketThreads.Count} threads");
 ```
 
-This is the code for creating the enqueries tickets invoking the OpenAI API service
+This is the code for creating the **CustomerMessage** inside the thread tickets:
 
+**TicketThreadGenerator**
+
+```csharp
+    private async Task<Response> GenerateCustomerMessageAsync(Product product, Ticket ticket, IReadOnlyList<TicketThreadMessage> messages)
+    {
+        var prompt = $@"You are generating test data for a customer support ticketing system. There is an open ticket as follows:
+        
+        Product: {product.Model}
+        Brand: {product.Brand}
+        Customer name: {ticket.CustomerFullName}
+
+        The message log so far is:
+
+        {FormatMessagesForPrompt(messages)}
+
+        Generate the next reply from the customer. You may do any of:
+
+        - Supply more information as requested by the support agent
+        - Say you did what the support agent suggested and whether or not it worked
+        - Confirm that your enquiry is now resolved and you accept the resolution
+        - Complain about the resolution
+        - Say you need more information
+
+        Write as if you are the customer. This customer ALWAYS writes in the following style: {ticket.CustomerStyle}.
+
+        Respond in the following JSON format: {{ ""message"": ""string"", ""shouldClose"": bool }}.
+        Indicate that the ticket should be closed if, as the customer, you feel the ticket is resolved (whether or not you are satisfied).
+";
+
+        return await GetAndParseJsonChatCompletion<Response>(prompt);
+    }
+```
+
+Now we create the prompt for creating the **Assistant** message:
+
+```csharp
+private async Task<Response> GenerateAssistantMessageAsync(Product product, Ticket ticket, IReadOnlyList<TicketThreadMessage> messages, IReadOnlyList<Manual> manuals)
+{
+    var prompt = $@"You are a customer service agent working for AdventureWorks, an online retailer. You are responding to a customer
+    enquiry about the following product:
+
+    Product: {product.Model}
+    Brand: {product.Brand}
+
+    The message log so far is:
+
+    {FormatMessagesForPrompt(messages)}
+
+    Your job is to provide the next message to send to the customer, and ideally close the ticket. Your goal is to help resolve their enquiry, which might include:
+
+    - Providing information or technical support
+    - Recommending a return or repair, if compliant with policy below
+    - Closing off-topic enquiries
+
+    You must first decide if you have enough information, and if not, either ask the customer for more details or search for information
+    in the product manual using the configured tool. Don't repeat information that was already given earlier in the message log.
+
+    Our policy for returns/repairs is:
+    - Returns are allowed within 30 days if the product is unused
+    - Defective products may be returned within 1 year of purchase for a refund
+    - There may be other warranty or repair options provided by the manufacturer, as detailed in the manual
+    Returns may be initiated at https://northernmountains.example.com/support/returns
+
+    You ONLY give information based on the product details and manual. If you cannot answer based on the provided context, say that you don't know.
+    Whenever possible, give your answer as a quote from the manual, for example saying ""According to the manual, ..."".
+    If needed, refer the customer to the manufacturer's support contact detail in the user manual, if any.
+
+    You refer to yourself only as ""AdventureWorks Support"", or ""Support team"".
+
+    Respond in the following JSON format: {{ ""message"": ""string"", ""shouldClose"": bool }}.
+    Indicate that the ticket should be closed only if the customer has confirmed it is resolved.
+    It's OK to give very short, 1-sentence replies if applicable.
+    ";
+
+    var manual = manuals.Single(m => m.ProductId == product.ProductId);
+    var tools = new AssistantTools(embedder, manual);
+    var searchManual = AIFunctionFactory.Create(tools.SearchUserManualAsync);
+
+    return await GetAndParseJsonChatCompletion<Response>(prompt, tools: [searchManual]);
+}
+```
 
 ### 7.8. **TicketSummaryGenerator**:
 
+We also summarize each ticket with the following prompt:
 
+```csharp
+ private async Task GenerateSummaryAsync(TicketThread thread)
+ {
+     // The reason for prompting to express satisfation in words rather than numerically, and forcing it to generate a summary
+     // of the customer's words before doing so, are necessary prompt engineering techniques. If it's asked to generate sentiment
+     // score without first summarizing the customer's words, then it scores the agent's response even when told not to. If it's
+     // asked to score numerically, it produces wildly random scores - it's much better with words than numbers.
+     string[] satisfactionScores = ["AbsolutelyFurious", "VeryUnhappy", "Unhappy", "Disappointed", "Indifferent", "Pleased", "Happy", "Delighted", "UnspeakablyThrilled"];
+
+     var product = products.Single(p => p.ProductId == thread.ProductId);
+     var prompt = $@"You are part of a customer support ticketing system.
+         Your job is to write brief summaries of customer support interactions. This is to help support agents
+         understand the context quickly so they can help the customer efficiently.
+
+         Here are details of a support ticket.
+
+         Product: {product.Model}
+         Brand: {product.Brand}
+         Customer name: {thread.CustomerFullName}
+
+         The message log so far is:
+
+         {TicketThreadGenerator.FormatMessagesForPrompt(thread.Messages)}
+
+         Write these summaries:
+
+         1. A longer summary that is up to 30 words long, condensing as much distinctive information
+            as possible. Do NOT repeat the customer or product name, since this is known anyway.
+            Try to include what SPECIFIC questions/info were given, not just stating in general that questions/info were given.
+            Always cite specifics of the questions or answers. For example, if there is pending question, summarize it in a few words.
+            FOCUS ON THE CURRENT STATUS AND WHAT KIND OF RESPONSE (IF ANY) WOULD BE MOST USEFUL FROM THE NEXT SUPPORT AGENT.
+
+         2. A shorter summary that is up to 8 words long. This functions as a title for the ticket,
+            so the goal is to distinguish what's unique about this ticket.
+
+         3. A 10-word summary of the latest thing the CUSTOMER has said, ignoring any agent messages. Then, based
+            ONLY on that, score the customer's satisfaction using one of the following phrases ranked from worst to best:
+            {string.Join(", ", satisfactionScores)}.
+            Pay particular attention to the TONE of the customer's messages, as we are most interested in their emotional state.
+
+         Both summaries will only be seen by customer support agents.
+
+         Respond as JSON in the following form: {{
+           ""longSummary"": ""string"",
+           ""shortSummary"": ""string"",
+           ""tenWordsSummarizingOnlyWhatCustomerSaid"": ""string"",
+           ""customerSatisfaction"": ""string"",
+           ""ticketStatus"": ""Open""|""Closed"",
+           ""ticketType"": ""Question""|""Idea""|""Complaint""|""Returns""
+         }}
+
+         ticketStatus should be Open if there is some remaining work for support agents to handle, otherwise Closed.
+         ticketType must be one of the specified values best matching the ticket. Do not use any other value except the specified ones.";
+
+     var response = await GetAndParseJsonChatCompletion<Response>(prompt);
+     thread.ShortSummary = response.ShortSummary;
+     thread.LongSummary = response.LongSummary;
+     thread.CustomerSatisfaction = null;
+     thread.TicketStatus = response.TicketStatus;
+     thread.TicketType = response.TicketType;
+
+     var satisfactionScore = Array.IndexOf(satisfactionScores, response.CustomerSatisfaction ?? string.Empty);
+     if (satisfactionScore > 0)
+     {
+         var satisfactionPercent = (int)(10 * ((double)satisfactionScore / (satisfactionScores.Length - 1)));
+         thread.CustomerSatisfaction = satisfactionPercent;
+     }
+ }
+```
 
 ### 7.9. **EvalQuestionGenerator**:
 
-
+Finally, 
 
 ## 8. We run the application and see the outputs
 
