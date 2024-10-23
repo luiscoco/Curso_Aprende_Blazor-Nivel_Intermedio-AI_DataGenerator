@@ -8,13 +8,25 @@ We developed the **DataGenerator** application highlighted in the **eShopSupport
 
 ## 1. Summary
 
-With this application you will learn how to invoke **OpenAI API (ChatGPT service)** or **Azure OpenAPI** from a C# Console application
+With this application you will learn how to invoke **OpenAI API (ChatGPT service)** or **Azure OpenAI** from a C# Console application
 
-For this purpose we use the **Microsoft.Extensions.AI** library and function **CompleteAsync**. See the the file **GeneratorBase.cs**
+For invoking **Azure OpenAI** we use **Azure.AI.OpenAI** and for invoking **OpenAI API (ChatGPT service)** we use **Microsoft.Extensions.AI.OpenAI**
+
+This sample is configured for **OpenAI API (ChatGPT service)**, see the appsettings.json file and the following code:
+
+```csharp
+builder.Services.AddSingleton<OpenAIClient>(_ => new OpenAIClient(key));
+```
+
+We also can configure for using **Azure OpenAI**
+
+For sending AI request we use the **Microsoft.Extensions.AI** library and function **CompleteAsync**. See the the file **GeneratorBase.cs**
 
 We also can learn the **Embedding and Manual Search**: The class uses an **IEmbeddingGenerator (for text embedding)** to facilitate information retrieval from product manuals. This is used in the assistant's responses to help resolve customer queries
 
 The **SearchUserManualAsync** function **searches product manuals** for relevant information using text embeddings and returns the most similar text snippets
+
+See **SearchUserManualAsync** function in the **TicketThreadGenerator** file
 
 ## 2. Create a C# application with Visual Studio 2022
 
@@ -777,6 +789,34 @@ private async Task<Response> GenerateAssistantMessageAsync(Product product, Tick
 The class uses an **IEmbeddingGenerator (for text embedding)** to facilitate information retrieval from product manuals. This is used in the assistant's responses to help resolve customer queries
 
 The **SearchUserManualAsync** function **searches product manuals** for relevant information using text embeddings and returns the most similar text snippets
+
+```csharp
+[Description("Searches for information in the product's user manual.")]
+public async Task<string> SearchUserManualAsync([Description("text to look for in user manual")] string query)
+{
+    // Obviously it would be more performant to chunk and embed each manual only once, but this is simpler for now
+    var chunks = SplitIntoChunks(manual.MarkdownText, 200).ToList();
+    var embeddings = await embedder.GenerateAsync(chunks);
+    var candidates = chunks.Zip(embeddings);
+    var queryEmbedding = (await embedder.GenerateAsync(query)).Single();
+
+    var closest = candidates
+        .Select(c => new { Text = c.First, Similarity = TensorPrimitives.CosineSimilarity(c.Second.Vector.Span, queryEmbedding.Vector.Span) })
+        .OrderByDescending(c => c.Similarity)
+        .Take(3)
+        .Where(c => c.Similarity > 0.6f)
+        .ToList();
+
+    if (closest.Any())
+    {
+        return string.Join(Environment.NewLine, closest.Select(c => $"<snippet_from_manual>{c.Text}</snippet_from_manual>"));
+    }
+    else
+    {
+        return "The manual contains no relevant information about this";
+    }
+}
+```
 
 ### 8.8. **TicketSummaryGenerator**:
 
