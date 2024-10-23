@@ -25,7 +25,7 @@ https://platform.openai.com/api-keys
 ```json
 {
   "ConnectionStrings": {
-    "chatcompletion": "Endpoint=https://api.openai.com/v1/chat/completion;Key=sk-0lBAyi2ZmZcRNZ3Xo78czjo96i5wKPm3u54p688IAWT3BlbkFJe-enEtklsUve_1re93L3sN6hgt25Irdn5SRI1ASBIA;Deployment=gpt-4"
+    "chatcompletion": "Endpoint=https://api.openai.com/v1/chat/completion;Key=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;Deployment=gpt-4o"
   }
 }
 ```
