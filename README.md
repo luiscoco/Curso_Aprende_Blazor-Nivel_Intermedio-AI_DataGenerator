@@ -678,6 +678,12 @@ The **GenerateThreadAsync** method generates a **conversation (thread)** for eac
 
 The **length of the conversation** is **randomized** using a geometric distribution, and the method determines whether the conversation should continue or if the ticket is resolved
 
+**GenerateCustomerMessageAsync** and **GenerateAssistantMessageAsync** are responsible for generating the next message from the customer and the support agent (assistant), respectively
+
+They use prompts to simulate realistic conversation flow
+
+Each message is constructed based on the product, ticket, and previous conversation history. The customer’s message style is also taken into account.
+
 This is the code for creating the **CustomerMessage** inside the thread tickets:
 
 **TicketThreadGenerator.cs**
