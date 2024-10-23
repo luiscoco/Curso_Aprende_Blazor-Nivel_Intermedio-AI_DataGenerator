@@ -1,4 +1,4 @@
-# How to create a DataGenerator with a C# Console application invoking OpenAI service
+# How to create a DataGenerator with a C# Console application invoking OpenAI API
 
 This sample is based on the github repo: https://github.com/dotnet/eShopSupport
 
@@ -542,7 +542,7 @@ We invoke the **Markdown2Pdf(version 2.2.1)** Nuget Package:
      }
 ```
 
-### 7.6. We create the Tickets
+### 7.6. We create the Enqueries Tickets
 
 We invoke in the **middleware** the **TicketGenerator** for creating the Tickets content:
 
@@ -655,11 +655,27 @@ We also invoke the OpenAI service with the following code giving also two main i
   }
 ```
 
-### 7.7.**TicketThreadGenerator**:
+### 7.7. We create the Threads Tickets
+
+We invoke in the **middleware** the **TicketThreadGenerator** for creating the Tickets content:
+
+Please verify in the following code, we need to create previously the products, manuals and enqueries tickets before generating the thread tickets:
+
+```csharp
+var ticketThreads = await new TicketThreadGenerator(tickets, products, manuals, services).GenerateAsync();
+Console.WriteLine($"Got {ticketThreads.Count} threads");
+```
+
+This is the code for creating the enqueries tickets invoking the OpenAI API service
+
 
 ### 7.8. **TicketSummaryGenerator**:
 
+
+
 ### 7.9. **EvalQuestionGenerator**:
+
+
 
 ## 8. We run the application and see the outputs
 
