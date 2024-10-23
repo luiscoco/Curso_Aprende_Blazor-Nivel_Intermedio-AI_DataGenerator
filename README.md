@@ -162,6 +162,19 @@ As we can see in the **Program.cs** this application sequentially execute the fo
 
 ### 7.1. We first invoke the **CategoryGenerator** class for generating product category names
 
+In the middleware we invoke the Categories geneation function:
+
+**Program.cs**
+
+```csharp
+var categories = await new CategoryGenerator(services).GenerateAsync();
+Console.WriteLine($"Got {categories.Count} categories");
+```
+
+Then the Categories are provided by the OpenAI service in a JSON format:
+
+**CategoryGenerator.cs**
+
 ```csharp
  var numCategories = 1;
 var batchSize = 1;
