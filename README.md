@@ -1,4 +1,10 @@
-# How to create a DataGenerator with a C# Console application invoking OpenAI API
+# Howto create a DataGenerator with a C# Console application invoking OpenAI API
+
+This sample is based on the github repo: https://github.com/dotnet/eShopSupport
+
+We developed the **DataGenerator** application highlighted in the **eShopSupport** architecture: 
+
+![image](https://github.com/user-attachments/assets/2992d5a7-3c8c-4e95-bc99-d1d50fcf793c)
 
 ## 1. Summary
 
@@ -6,13 +12,11 @@ With this application you will learn how to invoke **OpenAI API (ChatGPT service
 
 For this purpose we use the **Microsoft.Extensions.AI** library and function **CompleteAsync**. See the the file **GeneratorBase.cs**
 
-We also 
+We also can learn the **Embedding and Manual Search**: The class uses an **IEmbeddingGenerator (for text embedding)** to facilitate information retrieval from product manuals
 
-This sample is based on the github repo: https://github.com/dotnet/eShopSupport
+This is used in the assistant's responses to help resolve customer queries
 
-We developed the **DataGenerator** application highlighted in the **eShopSupport** architecture: 
-
-![image](https://github.com/user-attachments/assets/2992d5a7-3c8c-4e95-bc99-d1d50fcf793c)
+The **SearchUserManualAsync** function **searches product manuals** for relevant information using text embeddings and returns the most similar text snippets
 
 ## 2. Create a C# application with Visual Studio 2022
 
@@ -769,6 +773,12 @@ private async Task<Response> GenerateAssistantMessageAsync(Product product, Tick
     return await GetAndParseJsonChatCompletion<Response>(prompt, tools: [searchManual]);
 }
 ```
+
+**Embedding and Manual Search**:
+
+The class uses an **IEmbeddingGenerator (for text embedding)** to facilitate information retrieval from product manuals. This is used in the assistant's responses to help resolve customer queries
+
+The **SearchUserManualAsync** function **searches product manuals** for relevant information using text embeddings and returns the most similar text snippets
 
 ### 8.8. **TicketSummaryGenerator**:
 
