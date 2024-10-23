@@ -30,7 +30,7 @@ This sample is configured for **OpenAI API (ChatGPT service)**:
 builder.Services.AddSingleton<OpenAIClient>(_ => new OpenAIClient(key));
 ```
 
-We also can configure for using **Azure OpenAI**
+We also can configure for using **Azure OpenAI**:
 
 **appsettings.json**
 
