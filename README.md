@@ -14,11 +14,39 @@ For invoking **Azure OpenAI** we use **Azure.AI.OpenAI** and for invoking **Open
 
 This sample is configured for **OpenAI API (ChatGPT service)**, see the appsettings.json file and the following code:
 
+**appsettings.json**
+
+```json
+{
+  "ConnectionStrings": {
+    "chatcompletion": "Endpoint=https://api.openai.com/v1/chat/completion;Key=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;Deployment=gpt-4"
+  }
+}
+```
+
+**ChatCompletionServiceExtensions.cs**
+
 ```csharp
 builder.Services.AddSingleton<OpenAIClient>(_ => new OpenAIClient(key));
 ```
 
 We also can configure for using **Azure OpenAI**
+
+**appsettings.json**
+
+```json
+{
+  "ConnectionStrings": {
+    "chatcompletion": "Endpoint=https://<your-resource-name>.openai.azure.com/;Key=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;Deployment=<your-deployment-name>;ApiVersion=2023-05-15"
+  }
+}
+``
+
+**ChatCompletionServiceExtensions.cs**
+
+```csharp
+ builder.Services.AddSingleton<OpenAIClient>(_ => new AzureOpenAIClient(new Uri(endpoint), new ApiKeyCredential(key)));
+```
 
 For sending AI request we use the **Microsoft.Extensions.AI** library and function **CompleteAsync**. See the the file **GeneratorBase.cs**
 
