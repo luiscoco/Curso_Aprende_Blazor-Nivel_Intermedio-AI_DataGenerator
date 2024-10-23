@@ -1,4 +1,4 @@
-# How to create a DataGenerator with a C# Console application invoking OpenAI API
+# How to create a DataGenerator C# Console App for invoking OpenAI(ChatGPT) or Azure OpenAI with Microsoft.Extensions.AI
 
 This sample is based on the github repo: https://github.com/dotnet/eShopSupport
 
