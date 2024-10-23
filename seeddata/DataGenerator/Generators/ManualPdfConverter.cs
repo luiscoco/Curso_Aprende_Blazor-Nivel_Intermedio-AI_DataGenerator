@@ -20,7 +20,7 @@ public class ManualPdfConverter(IReadOnlyList<Product> products, IReadOnlyList<M
         TableOfContents = new()
         {
             ListStyle = ListStyle.Decimal, // Ensures numbered lists in TOC
-            MinDepthLevel = 1,
+            MinDepthLevel = 2,
             MaxDepthLevel = 4,
             PageNumberOptions = new()
             {
