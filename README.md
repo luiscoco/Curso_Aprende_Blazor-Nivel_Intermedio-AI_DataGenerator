@@ -550,4 +550,15 @@ We invoke the **Markdown2Pdf(version 2.2.1)** Nuget Package:
 
 ### 7.9. **EvalQuestionGenerator**:
 
-## 8. 
+## 8. We run the application and see the outputs
+
+After running the application we confirm the **output** folder was created
+
+And also inside the  **output** folder other folder were also created: **products**, **categories**, **manuals**, **tickets** and **evalquestions**
+
+![image](https://github.com/user-attachments/assets/76f157d2-35ea-4339-a3cc-782369093322)
+
+We can see inside each folder the JSON files created for the **products**, **categories**, **tickets** and **evalquestions**
+
+And also inside the **manuals** folder we find the JSON files for the TOCs, and the Markdown and PDF for the Manuals
+
