@@ -12,7 +12,7 @@ With this application you will learn how to invoke **OpenAI API (ChatGPT service
 
 For invoking **Azure OpenAI** we use **Azure.AI.OpenAI** and for invoking **OpenAI API (ChatGPT service)** we use **Microsoft.Extensions.AI.OpenAI**
 
-This sample is configured for **OpenAI API (ChatGPT service)**, see the appsettings.json file and the following code:
+This sample is configured for **OpenAI API (ChatGPT service)**:
 
 **appsettings.json**
 
