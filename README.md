@@ -52,9 +52,7 @@ For sending AI request we use the **Microsoft.Extensions.AI** library and functi
 
 We also can learn the **Embedding and Manual Search**: The class uses an **IEmbeddingGenerator (for text embedding)** to facilitate information retrieval from product manuals. This is used in the assistant's responses to help resolve customer queries
 
-The **SearchUserManualAsync** function **searches product manuals** for relevant information using text embeddings and returns the most similar text snippets
-
-See **SearchUserManualAsync** function in the **TicketThreadGenerator** file
+The **SearchUserManualAsync** function **searches product manuals** for relevant information using text embeddings and returns the most similar text snippets. The **SearchUserManualAsync** function is defined in the **TicketThreadGenerator** file
 
 ## 2. Create a C# application with Visual Studio 2022
 
