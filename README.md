@@ -1,12 +1,17 @@
 # How to create a DataGenerator with a C# Console application invoking OpenAI API
 
+With this application you will learn how to invoke **OpenAI API (ChatGPT service)** or **Azure OpenAPI** from a C# Console application
+
+For this purpose we use the **Microsoft.Extensions.AI** library and function **CompleteAsync**. See the the file **GeneratorBase.cs**
+
+We also 
+
 This sample is based on the github repo: https://github.com/dotnet/eShopSupport
 
 We developed the **DataGenerator** application highlighted in the following **eShopSupport** architecture picture: 
 
 ![image](https://github.com/user-attachments/assets/2992d5a7-3c8c-4e95-bc99-d1d50fcf793c)
 
-With this samples you will learn how to invoke OpenAI API from a C# Console application. For this purpose 
 
 ## 1. Create a C# application with Visual Studio 2022
 
