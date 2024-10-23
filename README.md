@@ -4,6 +4,22 @@ This sample is based on the github repo: https://github.com/dotnet/eShopSupport
 
 ## 1. Create a C# application with Visual Studio 2022
 
+We run Visual Studio 2022 and create a new project
+
+![image](https://github.com/user-attachments/assets/6306dce7-fbd5-4b67-9cde-b61b2a6e6085)
+
+We select the C# console project template and press the Next button
+
+![image](https://github.com/user-attachments/assets/8d248eb8-a9cb-4b0b-b3c9-995eeeb4fede)
+
+We input the project name and location and press the Next button
+
+![image](https://github.com/user-attachments/assets/8db8d777-4195-42c7-9cbf-8d3c05fd9bed)
+
+We select the .NET 8 or 9 framework and press the Create button
+
+![image](https://github.com/user-attachments/assets/a195ddf6-8989-41f4-9b4d-af22679300bb)
+
 ## 2. Get an OpenAPI Key
 
 Navigate to this URL and Generate an API Key: 
