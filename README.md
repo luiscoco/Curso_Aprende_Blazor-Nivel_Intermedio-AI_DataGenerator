@@ -668,7 +668,7 @@ Console.WriteLine($"Got {ticketThreads.Count} threads");
 
 This is the code for creating the **CustomerMessage** inside the thread tickets:
 
-**TicketThreadGenerator**
+**TicketThreadGenerator.cs**
 
 ```csharp
     private async Task<Response> GenerateCustomerMessageAsync(Product product, Ticket ticket, IReadOnlyList<TicketThreadMessage> messages)
@@ -702,6 +702,8 @@ This is the code for creating the **CustomerMessage** inside the thread tickets:
 ```
 
 Now we create the prompt for creating the **Assistant** message:
+
+**TicketThreadGenerator.cs**
 
 ```csharp
 private async Task<Response> GenerateAssistantMessageAsync(Product product, Ticket ticket, IReadOnlyList<TicketThreadMessage> messages, IReadOnlyList<Manual> manuals)
@@ -752,7 +754,16 @@ private async Task<Response> GenerateAssistantMessageAsync(Product product, Tick
 
 ### 7.8. **TicketSummaryGenerator**:
 
+In the middleware, we have to send as parameters the products and ticketThreads to be summarized bythe **TicketSummaryGenerator** class
+
+```
+var summarizedThreads = await new TicketSummaryGenerator(products, ticketThreads, services).GenerateAsync();
+Console.WriteLine($"Got {summarizedThreads.Count} thread summaries");
+```
+
 We also summarize each ticket with the following prompt:
+
+**TicketSummaryGenerator.cs**
 
 ```csharp
  private async Task GenerateSummaryAsync(TicketThread thread)
