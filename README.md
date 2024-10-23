@@ -377,9 +377,170 @@ private async Task<ManualToc> GenerateTocForProductAsync(Product product)
 }
 ```
 
-## 7.4. **ManualGenerator**:
+## 7.4. We create the Markdown file for each Product Manual
 
-## 7.5. **ManualPdfConverter**: 
+In the **middleware** after creating the Categories, Products and ToC we create the Manuals in Markdown format
+
+```csharp
+var services = builder.Build().Services;
+
+var categories = await new CategoryGenerator(services).GenerateAsync();
+Console.WriteLine($"Got {categories.Count} categories");
+
+var products = await new ProductGenerator(categories, services).GenerateAsync();
+Console.WriteLine($"Got {products.Count} products");
+
+var manualTocs = await new ManualTocGenerator(categories, products, services).GenerateAsync();
+Console.WriteLine($"Got {manualTocs.Count} manual TOCs");
+
+var manuals = await new ManualGenerator(categories, products, manualTocs, services).GenerateAsync();
+Console.WriteLine($"Got {manuals.Count} manuals");
+```
+
+This is code for generating the Manual:
+
+```csharp
+private async Task<Manual> GenerateManualAsync(ManualToc toc)
+{
+    var product = products.Single(p => p.ProductId == toc.ProductId);
+    var category = categories.Single(c => c.CategoryId == product.CategoryId);
+
+    var result = new StringBuilder();
+    result.AppendLine($"# {product.Model}");
+    result.AppendLine();
+
+    var desiredSubsectionWordLength = 500;
+    foreach (var section in toc.Sections)
+    {
+        Console.WriteLine($"[Product {product.ProductId}] Generating manual section {section.SiblingIndex}: {section.Title}");
+
+        var prompt = $@"Write a section of the user manual for the following product:
+        Category: {category.Name}
+        Brand: {product.Brand}
+        Product name: {product.Model}
+        Product overview: {product.Description}
+
+        Manual style description: {toc.ManualStyle} (note: the text MUST follow this style, even if it makes the manual less helpful to reader)
+
+        The section you are writing is ""{section.SiblingIndex}.{section.Title}"". It has the following structure:
+
+        {FormatTocForPrompt(section)}
+
+        Use valid Markdown formatting for PDF conversion, including:
+        - Headings (#, ##, ###)
+        - Simple lists (-, *, 1.)
+        - Paragraphs of text
+        - Bold (**bold**) and italics (*italics*)
+        - Simple tables:
+        | Feature | Description |
+        | ------- | ----------- |
+        - Images using the syntax: ![Description](path_to_image.jpg)
+
+        Start your response with the section title formatted as ""## {section.SiblingIndex}. {section.Title}"". The output should be around {desiredSubsectionWordLength * CountSubtreeLength(section)} words in total, or {desiredSubsectionWordLength} words per subsection. Avoid any commentary or remarks about the task.
+        ";
+
+        var response = await GetCompletion(prompt);
+        var sanitizedResponse = SanitizeMarkdown(response);
+        result.AppendLine(sanitizedResponse);
+        result.AppendLine();
+    }
+
+    return new Manual
+    {
+        ProductId = product.ProductId,
+        MarkdownText = result.ToString()
+    };
+}
+
+// This function sanitizes Markdown by removing unsupported or problematic elements
+private static string SanitizeMarkdown(string markdown)
+{
+    // Remove code blocks, diagrams, and other complex markdown elements that might break conversion
+    markdown = Regex.Replace(markdown, @"```.*?```", "", RegexOptions.Singleline);  // Remove code blocks
+    markdown = Regex.Replace(markdown, @"mermaid.*?```", "", RegexOptions.Singleline);  // Remove Mermaid diagrams
+    markdown = Regex.Replace(markdown, @"\!\[.*?\]\(.*?\)", "");  // Optionally remove images if they cause issues
+    // You can add more sanitization steps if necessary
+    return markdown;
+}
+```
+
+## 7.5. We convert the Manual from Markdown to PDF format
+
+After creating the Categories, Products, ToCs and Manuals (in Markdown format), we proceed to convert the Manuals to PDF
+
+```csharp
+var services = builder.Build().Services;
+
+var categories = await new CategoryGenerator(services).GenerateAsync();
+Console.WriteLine($"Got {categories.Count} categories");
+
+var products = await new ProductGenerator(categories, services).GenerateAsync();
+Console.WriteLine($"Got {products.Count} products");
+
+var manualTocs = await new ManualTocGenerator(categories, products, services).GenerateAsync();
+Console.WriteLine($"Got {manualTocs.Count} manual TOCs");
+
+var manuals = await new ManualGenerator(categories, products, manualTocs, services).GenerateAsync();
+Console.WriteLine($"Got {manuals.Count} manuals");
+
+var manualPdfs = await new ManualPdfConverter(products, manuals).ConvertAsync();
+Console.WriteLine($"Got {manualPdfs.Count} PDFs");
+```
+
+For converting to PDF from Mardown we define the **ManualPdfConverter** class
+
+We invoke the **Markdown2Pdf(version 2.2.1)** Nuget Package:
+
+```csharp
+ public async Task<IReadOnlyList<ManualPdf>> ConvertAsync()
+ {
+     var results = new List<ManualPdf>();
+
+     foreach (var manual in manuals)
+     {
+         var outputDir = Path.Combine(GeneratorBase<object>.OutputDirRoot, "manuals", "pdf");
+         var outputPath = Path.Combine(outputDir, $"{manual.ProductId}.pdf");
+         results.Add(new ManualPdf { ProductId = manual.ProductId, LocalPath = outputPath });
+
+         if (File.Exists(outputPath))
+         {
+             continue;
+         }
+
+         Directory.CreateDirectory(outputDir);
+
+         // Insert TOC marker after first level-1 heading
+         var firstMatch = true;
+         var markdown = Regex.Replace(manual.MarkdownText, "^(# .*\r?\n)", match =>
+         {
+             if (firstMatch)
+             {
+                 firstMatch = false;
+                 return match.Value + "\n[TOC]\n\n";
+             }
+             else
+             {
+                 return match.Value;
+             }
+         }, RegexOptions.Multiline);
+
+         using var inputFile = new TempFile(markdown);
+
+         var product = products.Single(p => p.ProductId == manual.ProductId);
+         var converter = CreateConverter(product);
+
+         try
+         {
+             // Attempt conversion and capture errors if they occur
+             await converter.Convert(inputFile.FilePath, outputPath);
+             Console.WriteLine($"Successfully wrote {Path.GetFileName(outputPath)}");
+         }
+         catch (Exception ex)
+         {
+             Console.WriteLine($"Error converting file {manual.ProductId}: {ex.Message}");
+         }
+     }
+```
 
 ## 7.6. **TicketGenerator**:
 
