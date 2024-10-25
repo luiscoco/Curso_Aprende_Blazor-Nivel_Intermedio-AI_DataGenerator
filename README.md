@@ -1033,6 +1033,18 @@ var numProducts = 1;
 var batchSize = 1;
 ```
 
+We also input the **numTickets**
+
+```csharp
+var numTickets = 1;
+var batchSize = 1;
+```
+
+and number of evaluation questions **numQuestions**
+
+```csharp
+var numQuestions = 1;
+```
 
 After running the application we confirm the **output** folder was created
 
