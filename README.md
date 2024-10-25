@@ -2,9 +2,13 @@
 
 This sample is based on the github repo: https://github.com/dotnet/eShopSupport
 
-We developed the **DataGenerator** application highlighted in the **eShopSupport** architecture: 
+We developed the **DataGenerator** application highlighted in the **eShopSupport** architecture:
 
 ![image](https://github.com/user-attachments/assets/2992d5a7-3c8c-4e95-bc99-d1d50fcf793c)
+
+The **DataGenerator** request to **LLM** (Large Language Models), as **OpenAI gpt-4o** or **Azure OpenAI gpt-4o**, to generate, in an **output** folder, **JSON** files
+
+This JSON files will contain a list of: **Categories**, **Products**, **Manuals Table of Contents** (ToCs), **Manuals** (with Markdown syntax), **Tickets** and **Evaluation Questions**
 
 ## 1. Summary
 
