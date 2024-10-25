@@ -84,6 +84,46 @@ https://platform.openai.com/api-keys
 
 ![image](https://github.com/user-attachments/assets/7ce8e9e5-01c0-426b-b392-e1d0b631d7e5)
 
+## 3. (OPTIONAL) Get the credentials from Azure OpenAI
+
+
+
+![image](https://github.com/user-attachments/assets/4ab20460-be18-49ba-96f7-f5d1196b7d31)
+
+![image](https://github.com/user-attachments/assets/83920d5a-8cd0-4216-a4c1-01a02b8f6520)
+
+![image](https://github.com/user-attachments/assets/386ca655-d89c-4b3c-800e-41ede5c06b6c)
+
+![image](https://github.com/user-attachments/assets/e88828b7-d823-4096-b677-4e09f74298dc)
+
+![image](https://github.com/user-attachments/assets/9187fce9-ab99-458c-b76b-123b08b6196a)
+
+We verify the Azure Open AI was created
+
+![image](https://github.com/user-attachments/assets/9f965334-44e4-4451-93d1-cb3753a01232)
+
+We navigate to the Deployments option and we proceed to create the **gpt-4o** deployment
+
+![image](https://github.com/user-attachments/assets/f8ad8fd3-4239-4526-b0f1-a45d9921397a)
+
+![image](https://github.com/user-attachments/assets/82920206-760d-414e-8f3b-277a3424ddb5)
+
+![image](https://github.com/user-attachments/assets/8479374f-2b07-4032-8acf-dd2b553b414e)
+
+![image](https://github.com/user-attachments/assets/c98e0834-8913-465f-966e-d99a527e29ae)
+
+Now we copy the Deployment **EndPoint** and **Key** and paste into the connection string defined in the **appsettings.json** file
+
+![image](https://github.com/user-attachments/assets/87929f84-520b-4f68-ba5f-8d79186e1db7)
+
+```json
+{
+  "ConnectionStrings": {
+    "chatcompletion": "Endpoint=https://myazureopenaiserviceluis.openai.azure.com/;Key=cff124bd1b844d0bad24eaf950aca521;Deployment=gpt-4o"
+  }
+}
+```
+
 ## 4. Create the project folders
 
 ![image](https://github.com/user-attachments/assets/a24e00ec-1f6d-4d39-85d1-01bc47346f1e)
