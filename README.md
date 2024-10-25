@@ -1099,6 +1099,8 @@ var numQuestions = 1;
 
 After running the application we confirm the **output** folder was created
 
+![image](https://github.com/user-attachments/assets/4c2d481d-b575-49d7-bf1d-592f3737a1e7)
+
 And also inside the  **output** folder other folder were also created: **products**, **categories**, **manuals**, **tickets** and **evalquestions**
 
 ![image](https://github.com/user-attachments/assets/76f157d2-35ea-4339-a3cc-782369093322)
