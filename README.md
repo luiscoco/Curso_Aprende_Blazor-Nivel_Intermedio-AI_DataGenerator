@@ -1020,17 +1020,8 @@ See in this code we assing **1** value to the variable **numCategories**
 **CategoryGenerator.cs**
 
 ```csharp
- protected override async IAsyncEnumerable<Category> GenerateCoreAsync()
- {
-     // If there are any categories already, assume this covers everything we need
-     if (Directory.GetFiles(OutputDirPath).Any())
-     {
-         yield break;
-     }
-
-     var numCategories = 1;
-     var batchSize = 1;
-     var categoryNames = new HashSet<string>();
+var numCategories = 1;
+var batchSize = 1;
 ```
 
 See in this code we assing **1** value to the variable **numProducts**
@@ -1038,18 +1029,8 @@ See in this code we assing **1** value to the variable **numProducts**
 **ProductGenerator.cs**
 
 ```csharp
-  protected override async IAsyncEnumerable<Product> GenerateCoreAsync()
-  {
-      // If there are any products already, assume this covers everything we need
-      if (Directory.GetFiles(OutputDirPath).Any())
-      {
-          yield break;
-      }
-
-      var numProducts = 1;
-      var batchSize = 1;
-      var productId = 0;
-
+var numProducts = 1;
+var batchSize = 1;
 ```
 
 
