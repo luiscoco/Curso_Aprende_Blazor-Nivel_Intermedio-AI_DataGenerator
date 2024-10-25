@@ -1013,6 +1013,46 @@ private async Task<EvalQuestion> GenerateSingle()
 
 ## 9. We run the application and see the outputs
 
+Before running the application for the first test we are going to **Set to One** the number of: **Categories**, **Products**, **Manuals**, **Tickets** and **Evaluation Questions**
+
+See in this code we assing **1** value to the variable **numCategories**
+
+**CategoryGenerator.cs**
+
+```csharp
+ protected override async IAsyncEnumerable<Category> GenerateCoreAsync()
+ {
+     // If there are any categories already, assume this covers everything we need
+     if (Directory.GetFiles(OutputDirPath).Any())
+     {
+         yield break;
+     }
+
+     var numCategories = 1;
+     var batchSize = 1;
+     var categoryNames = new HashSet<string>();
+```
+
+See in this code we assing **1** value to the variable **numProducts**
+
+**ProductGenerator.cs**
+
+```csharp
+  protected override async IAsyncEnumerable<Product> GenerateCoreAsync()
+  {
+      // If there are any products already, assume this covers everything we need
+      if (Directory.GetFiles(OutputDirPath).Any())
+      {
+          yield break;
+      }
+
+      var numProducts = 1;
+      var batchSize = 1;
+      var productId = 0;
+
+```
+
+
 After running the application we confirm the **output** folder was created
 
 And also inside the  **output** folder other folder were also created: **products**, **categories**, **manuals**, **tickets** and **evalquestions**
