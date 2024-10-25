@@ -116,12 +116,23 @@ Now we copy the Deployment **EndPoint** and **Key** and paste into the connectio
 
 ![image](https://github.com/user-attachments/assets/87929f84-520b-4f68-ba5f-8d79186e1db7)
 
+**appsettings.json**
+
 ```json
 {
   "ConnectionStrings": {
     "chatcompletion": "Endpoint=https://myazureopenaiserviceluis.openai.azure.com/;Key=cff124bd1b844d0bad24eaf950aca521;Deployment=gpt-4o"
   }
 }
+```
+
+We have to verify the middleware **Program.cs** register the AI service
+
+```csharp
+var builder = Host.CreateApplicationBuilder(args);
+builder.Configuration.AddJsonFile("appsettings.json");
+builder.AddOpenAIChatCompletion("chatcompletion");
+var services = builder.Build().Services;
 ```
 
 ## 4. Create the project folders
