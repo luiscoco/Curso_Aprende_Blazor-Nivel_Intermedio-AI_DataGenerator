@@ -1109,3 +1109,189 @@ We can see inside each folder the JSON files created for the **products**, **cat
 
 And also inside the **manuals** folder we find the JSON files for the TOCs, and the Markdown and PDF for the Manuals
 
+![image](https://github.com/user-attachments/assets/7fce5387-66fa-4528-8719-2c0ddf7c452f)
+
+We review the Categogies folder
+
+```json
+{
+  "categoryId": 1,
+  "name": "SolarClimbing",
+  "brands": [
+    "Ascend Power",
+    "Sun Trail Gear",
+    "HelioRidge",
+    "Peakcharge",
+    "Eco Climb Innovations",
+    "Summit Rays",
+    "Skyvault Tech",
+    "Solar Peak USA"
+  ]
+}
+```
+
+We review the Products folder
+
+```json
+{
+  "categoryId": 1,
+  "productId": 1,
+  "brand": "Peakcharge",
+  "model": "Summit SolarClimber Pro 100W",
+  "description": "High-efficiency 100W solar panel designed for climbers. Lightweight, foldable, and weather-resistant. Charge devices on-the-go with ease.",
+  "price": 249.99
+}
+```
+
+We review inside the Manuals ToC folder
+
+```
+{
+  "productId": 1,
+  "manualStyle": "incredibly negative and risk-averse, implying it would be unreasonable to use the product for any use case at all, and that it must not be used even for its most obvious and primary use case. Do not admit any design or manufacturing faults. Do not apologise that the product is unsuitable. No matter what the user may be trying to do, emphasize that the product must not be used in that specific way. Give examples of harms that came to prior users.",
+  "sections": [
+    {
+      "siblingIndex": 1,
+      "title": "Introduction",
+      "subsections": []
+    },
+    {
+      "siblingIndex": 2,
+      "title": "Safety Warnings",
+      "subsections": [
+        {
+          "siblingIndex": 1,
+          "title": "General Precautions",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 2,
+          "title": "Electrical Risks",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 3,
+          "title": "Weather Hazards",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 4,
+          "title": "Health Concerns",
+          "subsections": []
+        }
+      ]
+    },
+    {
+      "siblingIndex": 3,
+      "title": "Unboxing the Product",
+      "subsections": []
+    },
+    {
+      "siblingIndex": 4,
+      "title": "Installation Instructions",
+      "subsections": [
+        {
+          "siblingIndex": 1,
+          "title": "Choosing a Safe Location",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 2,
+          "title": "Mounting the Solar Panel",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 3,
+          "title": "Cable Management",
+          "subsections": []
+        }
+      ]
+    },
+    {
+      "siblingIndex": 5,
+      "title": "Operation Guidelines",
+      "subsections": [
+        {
+          "siblingIndex": 1,
+          "title": "Daily Usage Risks",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 2,
+          "title": "Time of Day Considerations",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 3,
+          "title": "Potential Interference",
+          "subsections": []
+        }
+      ]
+    },
+    {
+      "siblingIndex": 6,
+      "title": "Charging Devices",
+      "subsections": [
+        {
+          "siblingIndex": 1,
+          "title": "Compatibility Concerns",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 2,
+          "title": "Connection Dangers",
+          "subsections": []
+        }
+      ]
+    },
+    {
+      "siblingIndex": 7,
+      "title": "Maintenance and Storage",
+      "subsections": [
+        {
+          "siblingIndex": 1,
+          "title": "Cleaning Procedures",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 2,
+          "title": "Storage Conditions",
+          "subsections": []
+        }
+      ]
+    },
+    {
+      "siblingIndex": 8,
+      "title": "Troubleshooting",
+      "subsections": [
+        {
+          "siblingIndex": 1,
+          "title": "Identifying Issues",
+          "subsections": []
+        },
+        {
+          "siblingIndex": 2,
+          "title": "Seeking Professional Help",
+          "subsections": []
+        }
+      ]
+    },
+    {
+      "siblingIndex": 9,
+      "title": "Disposal Instructions",
+      "subsections": []
+    },
+    {
+      "siblingIndex": 10,
+      "title": "Legal Disclaimer",
+      "subsections": []
+    },
+    {
+      "siblingIndex": 11,
+      "title": "Customer Support",
+      "subsections": []
+    }
+  ]
+}
+```
+
